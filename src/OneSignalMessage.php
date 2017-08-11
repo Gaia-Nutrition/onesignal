@@ -7,6 +7,9 @@ use Illuminate\Support\Arr;
 class OneSignalMessage
 {
     /** @var string */
+    protected $appId;
+
+    /** @var string */
     protected $body;
 
     /** @var string */
@@ -43,6 +46,20 @@ class OneSignalMessage
     public function __construct($body = '')
     {
         $this->body = $body;
+    }
+
+    /**
+     * Set the target app_id.
+     *
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function appId($value)
+    {
+        $this->appId = $value;
+
+        return $this;
     }
 
     /**
@@ -160,6 +177,10 @@ class OneSignalMessage
             'adm_small_icon' => $this->icon,
             'small_icon' => $this->icon,
         ];
+
+        if($this->appId !== null){
+            $message['app_id'] = $this->appId;
+        }
 
         foreach ($this->data as $data => $value) {
             Arr::set($message, 'data.'.$data, $value);

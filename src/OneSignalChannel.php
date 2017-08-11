@@ -34,6 +34,12 @@ class OneSignalChannel
         $payload = $notification->toOneSignal($notifiable)->toArray();
         $payload['include_player_ids'] = collect($userIds);
 
+        // Only way to add custom app_id. (see issue: https://github.com/berkayk/laravel-onesignal/issues/33)
+        if(isset($payload['app_id'])) {
+            $this->oneSignal->setParam('app_id', $payload['app_id']);
+            unset($payload['app_id']);
+        }
+
         /** @var ResponseInterface $response */
         $response = $this->oneSignal->sendNotificationCustom($payload);
 
